@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: termo-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_TYPE=sqlite
+      - JWT_SECRET=dev_secret_key_change_in_production
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./data:/app/data
+    command: npm run dev
+

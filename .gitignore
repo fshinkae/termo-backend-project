@@ -5,4 +5,7 @@ node_modules/
 coverage/
 dist/
 build/
+data/
+*.db
+*.db-journal
 
