@@ -1,6 +1,6 @@
 # Termo Backend Project
 
-Backend desenvolvido com Node.js e Express.
+Backend desenvolvido com Node.js, Express e SQLite.
 
 ## Estrutura do Projeto
 
@@ -11,25 +11,55 @@ src/
 ├── controllers/       # Controladores
 ├── models/            # Modelos de dados
 ├── middlewares/       # Middlewares customizados
-├── config/            # Configurações
+├── config/            # Configurações (database, seed)
 └── utils/             # Utilitários
+data/                  # Banco de dados SQLite
 ```
 
+## Modelo de Dados
+
+### Users
+- User_Id (PK)
+- Nickname
+- Email
+- Password
+- Status_ID (FK)
+- Avatar
+
+### Status
+- Status_ID (PK)
+- Points
+- Wins
+- Loses
+- Rank
+
+### Keyword
+- Keyword_ID (PK)
+- Keyword
+
 ## Instalação
+
+### Local
 
 ```bash
 npm install
 ```
 
-## Configuração
-
-Crie um arquivo `.env` baseado no `.env.example`:
-
+Crie um arquivo `.env`:
 ```bash
 cp .env.example .env
 ```
 
+### Docker
+
+```bash
+npm run docker:build
+npm run docker:up
+```
+
 ## Executar
+
+### Local
 
 Desenvolvimento:
 ```bash
@@ -41,6 +71,23 @@ Produção:
 npm start
 ```
 
+### Docker
+
+Iniciar container:
+```bash
+npm run docker:up
+```
+
+Ver logs:
+```bash
+npm run docker:logs
+```
+
+Parar container:
+```bash
+npm run docker:down
+```
+
 ## Endpoints
 
 - `GET /` - Mensagem de boas-vindas
@@ -50,6 +97,8 @@ npm start
 
 - Node.js
 - Express
+- SQLite (better-sqlite3)
+- Docker
 - CORS
 - dotenv
 
