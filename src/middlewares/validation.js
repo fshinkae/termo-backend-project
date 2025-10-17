@@ -68,3 +68,45 @@ export const validateLogin = (req, res, next) => {
   next();
 };
 
+export const validateGameFinish = (req, res, next) => {
+  const { score, win, lose } = req.body;
+  const callerID = req.headers['x-caller-id'];
+  const tigerToken = req.headers['x-tiger-token'];
+
+  if (!callerID) {
+    return res.status(400).json({
+      error: 'Unavailable Fields',
+      message: 'x-caller-id is required'
+    });
+  }
+
+  if (!tigerToken) {
+    return res.status(400).json({
+      error: 'Unavailable Fields',
+      message: 'x-tiger-token field is required'
+    });
+}
+
+  if (score === undefined) {
+    return res.status(400).json({
+      error: 'Unavailable Fields',
+      message: 'Score field is required'
+    });
+  }
+
+  if (typeof win !== 'boolean' || typeof lose !== 'boolean') {
+    return res.status(400).json({
+      error: 'Invalid Fields',
+      message: 'Win and Lose fields must be boolean'
+    });
+  }
+
+  if (win === lose) {
+    return res.status(400).json({
+      error: 'Invalid Combination',
+      message: 'Either win or lose must be true, but not both'
+    });
+  }
+
+  next();
+};
