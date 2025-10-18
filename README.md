@@ -90,8 +90,90 @@ npm run docker:down
 
 ## Endpoints
 
+### Health Check
 - `GET /` - Mensagem de boas-vindas
 - `GET /api/health` - Health check
+
+### Autenticação
+
+#### POST /api/auth/register
+Cria um novo usuário no sistema.
+
+**Request Body:**
+```json
+{
+  "name": "string",
+  "email": "string",
+  "password": "string"
+}
+```
+
+**Respostas:**
+- `201 Created` - Usuário criado com sucesso
+  ```json
+  {
+    "message": "User registered successfully",
+    "token": "JWT_TOKEN",
+    "user": {
+      "id": 1,
+      "nickname": "string",
+      "email": "string"
+    }
+  }
+  ```
+- `400 Bad Request` - Campo inválido ou ausente
+  ```json
+  {
+    "error": "Unavailable Field",
+    "message": "Email is required"
+  }
+  ```
+- `409 Conflict` - Email já cadastrado
+  ```json
+  {
+    "error": "Conflict",
+    "message": "Email already registered"
+  }
+  ```
+
+#### POST /api/auth/login
+Autentica um usuário e retorna um token JWT.
+
+**Request Body:**
+```json
+{
+  "email": "string",
+  "password": "string"
+}
+```
+
+**Respostas:**
+- `200 OK` - Login bem-sucedido
+  ```json
+  {
+    "message": "Login successful",
+    "token": "JWT_TOKEN",
+    "user": {
+      "id": 1,
+      "nickname": "string",
+      "email": "string"
+    }
+  }
+  ```
+- `400 Bad Request` - Campo inválido ou ausente
+  ```json
+  {
+    "error": "Unavailable Field",
+    "message": "Email is required"
+  }
+  ```
+- `401 Unauthorized` - Credenciais inválidas
+  ```json
+  {
+    "error": "Unauthorized",
+    "message": "Invalid credentials"
+  }
+  ```
 
 ## Tecnologias
 
