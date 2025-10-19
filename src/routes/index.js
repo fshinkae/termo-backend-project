@@ -1,5 +1,6 @@
 import express from 'express';
 import authRoutes from './authRoutes.js';
+import friendRoutes from './friendRoutes.js';
 
 const router = express.Router();
 
@@ -8,6 +9,7 @@ router.get('/health', (req, res) => {
 });
 
 router.use('/auth', authRoutes);
+router.use('/friend', friendRoutes);
 
 export default router;
 
