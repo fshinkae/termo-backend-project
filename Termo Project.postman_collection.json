@@ -165,6 +165,599 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Game Flow",
+			"item": [
+				{
+					"name": "Finish Game (Win)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "x-caller-id",
+								"value": "{{userId}}"
+							},
+							{
+								"key": "x-tiger-token",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"score\": 100,\n    \"win\": true,\n    \"lose\": false,\n    \"tries\": 3,\n    \"keyword\": \"SAGAZ\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/game/finish",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"game",
+								"finish"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Finish Game Win Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "x-caller-id",
+										"value": "{{userId}}"
+									},
+									{
+										"key": "x-tiger-token",
+										"value": "{{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"score\": 100,\n    \"win\": true,\n    \"lose\": false,\n    \"tries\": 3,\n    \"keyword\": \"CORDA\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/game/finish",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"game",
+										"finish"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Game finished successfully\",\n  \"game\": {\n    \"id\": \"31d1b951-0838-4fd5-a8c5-467c664a72e4\",\n    \"keyword\": \"SAGAZ\",\n    \"tries\": 3,\n    \"isWin\": true,\n    \"xp\": 200,\n    \"points\": 100,\n    \"createdAt\": \"2025-10-20 18:24:48\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Finish Game (Loss)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "x-caller-id",
+								"value": "{{userId}}"
+							},
+							{
+								"key": "x-tiger-token",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"score\": 50,\n    \"win\": false,\n    \"lose\": true,\n    \"tries\": 6,\n    \"keyword\": \"ETNIA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/game/finish",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"game",
+								"finish"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Finish Game Loss Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "x-caller-id",
+										"value": "{{userId}}"
+									},
+									{
+										"key": "x-tiger-token",
+										"value": "{{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"score\": 50,\n    \"win\": false,\n    \"lose\": true,\n    \"tries\": 6,\n    \"keyword\": \"TERMO\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/game/finish",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"game",
+										"finish"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Game finished successfully\",\n  \"game\": {\n    \"id\": \"19803b6a-4c50-48d4-ba99-a9957e6c3e42\",\n    \"keyword\": \"ETNIA\",\n    \"tries\": 6,\n    \"isWin\": false,\n    \"xp\": 25,\n    \"points\": 50,\n    \"createdAt\": \"2025-10-20 18:25:16\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Random Keyword",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/game/random-keyword",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"game",
+								"random-keyword"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Random Keyword Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/game/random-keyword",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"game",
+										"random-keyword"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"keywordId\": 1,\n  \"keyword\": \"SAGAZ\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Game History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/game/history",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"game",
+								"history"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Game History Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/game/history",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"game",
+										"history"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Game history retrieved successfully\",\n  \"totalGames\": 2,\n  \"games\": [\n    {\n      \"id\": \"394dbdba-0495-44cc-b19b-87272ee78b14\",\n      \"keyword\": \"TESTE\",\n      \"tries\": 3,\n      \"isWin\": true,\n      \"xp\": 200,\n      \"points\": 100,\n      \"createdAt\": \"2025-10-20 21:00:51\"\n    },\n    {\n      \"id\": \"19803b6a-4c50-48d4-ba99-a9957e6c3e42\",\n      \"keyword\": \"PERDE\",\n      \"tries\": 5,\n      \"isWin\": false,\n      \"xp\": 37,\n      \"points\": 75,\n      \"createdAt\": \"2025-10-20 18:25:16\"\n    }\n  ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Friends Flow",
+			"item": [
+				{
+					"name": "Add Friend",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"friendId\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/friend/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"friend",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Friend Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/friend/accept/:friendId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"friend",
+								"accept",
+								":friendId"
+							],
+							"variable": [
+								{
+									"key": "friendId",
+									"value": "2",
+									"description": "ID do usuário que enviou o pedido"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Friend",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/friend/remove/:friendId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"friend",
+								"remove",
+								":friendId"
+							],
+							"variable": [
+								{
+									"key": "friendId",
+									"value": "2",
+									"description": "ID do amigo a remover"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Block User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/friend/block/:friendId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"friend",
+								"block",
+								":friendId"
+							],
+							"variable": [
+								{
+									"key": "friendId",
+									"value": "2",
+									"description": "ID do usuário a bloquear"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Friends List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/friend/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"friend",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Pending Requests",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/friend/requests/pending",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"friend",
+								"requests",
+								"pending"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Sent Requests",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/friend/requests/sent",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"friend",
+								"requests",
+								"sent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Blocked Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/friend/blocked",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"friend",
+								"blocked"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
