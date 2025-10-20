@@ -242,6 +242,179 @@ Autentica um usuário e retorna um token JWT.
   }
   ```
 
+### Amizades
+
+#### POST /api/friend/add
+Envia pedido de amizade para outro usuário.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN"
+}
+```
+
+**Request Body:**
+```json
+{
+  "friendId": 2
+}
+```
+
+**Respostas:**
+- `200 OK` - Pedido enviado
+  ```json
+  {
+    "message": "Friend request sent successfully",
+    "friendship": {
+      "id": 1,
+      "userId": 1,
+      "friendId": 2,
+      "status": "pending"
+    }
+  }
+  ```
+- `400 Bad Request` - Erro de validação
+- `401 Unauthorized` - Token inválido
+- `404 Not Found` - Usuário não encontrado
+- `409 Conflict` - Pedido já existe
+
+#### POST /api/friend/accept/:friendId
+Aceita pedido de amizade.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN"
+}
+```
+
+**Respostas:**
+- `200 OK` - Pedido aceito
+  ```json
+  {
+    "message": "Friend request accepted",
+    "friend": {
+      "id": 2,
+      "nickname": "Alice",
+      "email": "alice@test.com",
+      "avatar": null
+    }
+  }
+  ```
+
+#### DELETE /api/friend/remove/:friendId
+Remove amizade ou cancela pedido.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN"
+}
+```
+
+**Respostas:**
+- `200 OK` - Amizade removida
+  ```json
+  {
+    "message": "Friendship removed successfully"
+  }
+  ```
+
+#### POST /api/friend/block/:friendId
+Bloqueia um usuário.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN"
+}
+```
+
+**Respostas:**
+- `200 OK` - Usuário bloqueado
+  ```json
+  {
+    "message": "User blocked successfully"
+  }
+  ```
+
+#### GET /api/friend/list
+Lista todos os amigos do usuário autenticado.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN"
+}
+```
+
+**Respostas:**
+- `200 OK`
+  ```json
+  {
+    "message": "Friends retrieved successfully",
+    "count": 2,
+    "friends": [
+      {
+        "id": 2,
+        "nickname": "Alice",
+        "email": "alice@test.com",
+        "avatar": null,
+        "friendsSince": "2025-10-19 21:35:07"
+      }
+    ]
+  }
+  ```
+
+#### GET /api/friend/requests/pending
+Lista pedidos de amizade recebidos (pendentes).
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN"
+}
+```
+
+**Respostas:**
+- `200 OK`
+  ```json
+  {
+    "message": "Pending requests retrieved successfully",
+    "count": 1,
+    "requests": [
+      {
+        "id": 3,
+        "nickname": "Bob",
+        "email": "bob@test.com",
+        "avatar": null,
+        "requestedAt": "2025-10-19 21:35:07"
+      }
+    ]
+  }
+  ```
+
+#### GET /api/friend/requests/sent
+Lista pedidos de amizade enviados.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN"
+}
+```
+
+#### GET /api/friend/blocked
+Lista usuários bloqueados.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN"
+}
+```
+
 ## Exemplos de Uso
 
 ### Consultar Logs de Auditoria

@@ -75,6 +75,7 @@ CREATE INDEX IF NOT EXISTS idx_activity_log_user ON Activity_Log(User_ID);
 CREATE INDEX IF NOT EXISTS idx_activity_log_action ON Activity_Log(Action_Type);
 CREATE INDEX IF NOT EXISTS idx_game_keyword ON Game(Keyword_ID);
 
+DROP TRIGGER IF EXISTS log_user_insert;
 CREATE TRIGGER log_user_insert
 AFTER INSERT ON Users
 FOR EACH ROW
@@ -83,6 +84,7 @@ BEGIN
   VALUES (NEW.User_Id, 'USER_REGISTERED', 'User ' || NEW.Nickname || ' registered');
 END;
 
+DROP TRIGGER IF EXISTS log_user_nickname_update;
 CREATE TRIGGER log_user_nickname_update
 AFTER UPDATE OF Nickname ON Users
 FOR EACH ROW
@@ -93,6 +95,7 @@ BEGIN
           'Nickname: ' || OLD.Nickname || ' → ' || NEW.Nickname);
 END;
 
+DROP TRIGGER IF EXISTS log_user_email_update;
 CREATE TRIGGER log_user_email_update
 AFTER UPDATE OF Email ON Users
 FOR EACH ROW
@@ -103,6 +106,7 @@ BEGIN
           'Email: ' || OLD.Email || ' → ' || NEW.Email);
 END;
 
+DROP TRIGGER IF EXISTS log_user_avatar_update;
 CREATE TRIGGER log_user_avatar_update
 AFTER UPDATE OF Avatar ON Users
 FOR EACH ROW
@@ -112,6 +116,7 @@ BEGIN
   VALUES (NEW.User_Id, 'AVATAR_UPDATED', 'Avatar changed');
 END;
 
+DROP TRIGGER IF EXISTS log_user_password_change;
 CREATE TRIGGER log_user_password_change
 AFTER UPDATE OF Password ON Users
 FOR EACH ROW
@@ -121,6 +126,7 @@ BEGIN
   VALUES (NEW.User_Id, 'PASSWORD_CHANGED', 'Password changed');
 END;
 
+DROP TRIGGER IF EXISTS log_user_delete;
 CREATE TRIGGER log_user_delete
 BEFORE DELETE ON Users
 FOR EACH ROW

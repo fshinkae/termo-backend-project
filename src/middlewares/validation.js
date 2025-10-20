@@ -68,3 +68,43 @@ export const validateLogin = (req, res, next) => {
   next();
 };
 
+export const validateFriendRequest = (req, res, next) => {
+  const { friendId } = req.body;
+
+  if (!friendId) {
+    return res.status(400).json({
+      error: 'Unavailable Field',
+      message: 'friendId is required'
+    });
+  }
+
+  if (typeof friendId !== 'number' && isNaN(parseInt(friendId))) {
+    return res.status(400).json({
+      error: 'Unavailable Field',
+      message: 'friendId must be a valid number'
+    });
+  }
+
+  next();
+};
+
+export const validateFriendId = (req, res, next) => {
+  const { friendId } = req.params;
+
+  if (!friendId) {
+    return res.status(400).json({
+      error: 'Unavailable Field',
+      message: 'friendId is required'
+    });
+  }
+
+  if (isNaN(parseInt(friendId))) {
+    return res.status(400).json({
+      error: 'Unavailable Field',
+      message: 'friendId must be a valid number'
+    });
+  }
+
+  next();
+};
+
