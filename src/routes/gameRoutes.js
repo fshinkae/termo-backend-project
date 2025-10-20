@@ -5,6 +5,7 @@ import { fakeJWT } from '../utils/auth.js';
 
 const router = express.Router();
 
-router.put('/finish', fakeJWT, validateGameFinish, finishGame);
+router.put('/finish', verifyJWT, validateGameFinish, finishGame);
+
 
 export default router;
