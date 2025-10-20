@@ -1,10 +1,7 @@
 import express from 'express';
 import { finishGame } from '../controllers/endgameController.js';
 import { validateGameFinish } from '../middlewares/validation.js';
-import { authenticateToken } from '../middlewares/auth.js';
-import Game from '../models/Game.js';
-import Keyword from '../models/Keyword.js';
-import History from '../models/History.js';
+import { fakeJWT } from '../utils/auth.js';
 
 const router = express.Router();
 
@@ -21,7 +18,7 @@ router.get('/random-keyword', authenticateToken, async (req, res) => {
         message: 'No keywords available'
       });
     }
-    
+
     res.json({
       keywordId: keyword.Keyword_ID,
       keyword: keyword.Keyword
@@ -40,7 +37,7 @@ router.get('/history', authenticateToken, async (req, res) => {
   try {
     const userId = req.userId;
     const userGames = await History.getUserHistory(userId);
-    
+
     if (!userGames || userGames.length === 0) {
       return res.json({
         message: 'No game history found',
@@ -49,7 +46,7 @@ router.get('/history', authenticateToken, async (req, res) => {
     }
 
     const games = [];
-    
+
     for (const game of userGames) {
       const keyword = await Keyword.findById(game.Keyword_ID);
       games.push({
