@@ -61,6 +61,12 @@ class User {
     const result = stmt.run(historyId, userId);
     return result.changes > 0;
   }
+
+  static getStatus(statusId) {
+    if (!statusId) return null;
+    const stmt = db.prepare('SELECT * FROM Status WHERE Status_ID = ?');
+    return stmt.get(statusId);
+  }
 }
 
 export default User;

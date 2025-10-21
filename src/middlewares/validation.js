@@ -165,3 +165,16 @@ export const validateFriendId = (req, res, next) => {
 
   next();
 };
+
+export const validateCallerId = (req, res, next) => {
+  const callerId = req.headers['x-caller-id'];
+
+  if (!callerId) {
+    return res.status(400).json({
+      error: 'Unavailable Field',
+      message: 'x-caller-id header is required'
+    });
+  }
+
+  next();
+};
