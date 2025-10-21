@@ -41,12 +41,14 @@ data/                  # Banco de dados SQLite
 - Created_at (timestamp)
 
 ### Game
-- Game_ID (PK)
+- Game_ID (PK, TEXT - UUID hash)
+- User_ID (FK → Users)
 - Keyword_ID (FK → Keyword)
 - Tries (tentativas usadas)
 - isWin (0 ou 1, boolean)
 - XP (experiência ganha)
 - Points (pontos ganhos)
+- Created_at (timestamp)
 
 ### Keyword
 - Keyword_ID (PK)
@@ -91,7 +93,9 @@ Status (1:1) ←──── Users (1:N) ────→ History
                       │
                       ├────→ Friendships (N:N, auto-relacionamento)
                       │
-                      └────→ Activity_Log (1:N, auditoria)
+                      ├────→ Activity_Log (1:N, auditoria)
+                      │
+                      └────→ Game (1:N)
 
 Keyword (1:N) ←──── Game
                       │
@@ -102,7 +106,9 @@ Keyword (1:N) ←──── Game
 - **Users ↔ History**: Relacionamento 1:1, mas History_ID começa NULL (criado no primeiro jogo)
 - **Users ↔ Friendships**: Auto-relacionamento N:N (um usuário pode ter vários amigos)
 - **Users ↔ Activity_Log**: Relacionamento 1:N para auditoria de ações
+- **Users ↔ Game**: Relacionamento 1:N (um usuário pode ter vários jogos)
 - **Game ↔ History**: IDs dos jogos armazenados como JSON array em History.Game_IDs
+- **Game ID**: Usa UUID hash para identificação única
 
 ## Instalação
 
@@ -241,6 +247,103 @@ Autentica um usuário e retorna um token JWT.
     "message": "Invalid credentials"
   }
   ```
+
+### Game
+
+#### PUT /api/game/finish
+Finaliza um jogo e registra o resultado.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN",
+  "x-caller-id": "USER_ID",
+  "x-tiger-token": "JWT_TOKEN"
+}
+```
+
+**Request Body:**
+```json
+{
+  "score": 100,
+  "win": true,
+  "lose": false,
+  "tries": 3,
+  "keyword": "SAGAZ"
+}
+```
+
+**Respostas:**
+- `200 OK` - Jogo finalizado com sucesso
+  ```json
+  {
+    "message": "Game finished successfully",
+    "game": {
+      "id": "31d1b951-0838-4fd5-a8c5-467c664a72e4",
+      "keyword": "SAGAZ",
+      "tries": 3,
+      "isWin": true,
+      "xp": 200,
+      "points": 100,
+      "createdAt": "2025-10-20 18:24:48"
+    }
+  }
+  ```
+- `400 Bad Request` - Campos inválidos ou ausentes
+- `401 Unauthorized` - Token inválido
+- `404 Not Found` - Usuário não encontrado
+
+#### GET /api/game/random-keyword
+Obtém uma palavra aleatória para o jogo.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN"
+}
+```
+
+**Respostas:**
+- `200 OK` - Palavra obtida com sucesso
+  ```json
+  {
+    "keywordId": 1,
+    "keyword": "SAGAZ"
+  }
+  ```
+- `401 Unauthorized` - Token inválido
+- `404 Not Found` - Nenhuma palavra disponível
+
+#### GET /api/game/history
+Obtém o histórico de jogos do usuário autenticado.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN"
+}
+```
+
+**Respostas:**
+- `200 OK` - Histórico obtido com sucesso
+  ```json
+  {
+    "message": "Game history retrieved successfully",
+    "totalGames": 2,
+    "games": [
+      {
+        "id": "394dbdba-0495-44cc-b19b-87272ee78b14",
+        "keyword": "TESTE",
+        "tries": 3,
+        "isWin": true,
+        "xp": 200,
+        "points": 100,
+        "createdAt": "2025-10-20 21:00:51"
+      }
+    ]
+  }
+  ```
+- `401 Unauthorized` - Token inválido
 
 ### Amizades
 
@@ -458,6 +561,39 @@ sqlite3 data/termo.db "SELECT name FROM sqlite_master WHERE type='trigger';"
 sqlite3 data/termo.db "SELECT name FROM sqlite_master WHERE type='index';"
 ```
 
+## Funcionalidades
+
+### 🎮 Sistema de Jogos
+- **Finalização de Jogos**: Registro completo de resultados com UUID hash
+- **Histórico por Usuário**: Cada usuário tem seu próprio histórico de jogos
+- **Palavras Aleatórias**: Sistema de palavras de 5 letras para jogos
+- **Cálculo de XP**: Sistema de experiência baseado em vitórias/derrotas
+- **Game IDs Únicos**: Identificação única usando UUID hash
+
+### 👥 Sistema de Usuários
+- **Registro e Login**: Autenticação JWT completa
+- **Perfis de Usuário**: Nickname, email, avatar
+- **Status Preparado**: Estrutura pronta para sistema de estatísticas
+- **Auditoria Completa**: Log de todas as ações do usuário
+
+### 🤝 Sistema de Amizades
+- **Pedidos de Amizade**: Envio e recebimento de convites
+- **Status de Amizade**: Pending, accepted, blocked
+- **Listagem de Amigos**: Amigos aceitos e pedidos pendentes
+- **Bloqueio de Usuários**: Sistema de bloqueio
+
+### 🔒 Segurança
+- **Autenticação JWT**: Tokens seguros para autenticação
+- **Validação de Dados**: Middlewares de validação robustos
+- **Hash de Senhas**: Senhas protegidas com bcrypt
+- **Headers de Segurança**: Validação de headers customizados
+
+### 📊 Banco de Dados
+- **SQLite**: Banco leve e eficiente
+- **Relacionamentos**: Estrutura normalizada com foreign keys
+- **Triggers de Auditoria**: Log automático de mudanças
+- **Índices Otimizados**: Performance otimizada para consultas
+
 ## Tecnologias
 
 ### Backend
@@ -468,6 +604,7 @@ sqlite3 data/termo.db "SELECT name FROM sqlite_master WHERE type='index';"
 - **jsonwebtoken** - Autenticação JWT
 - **CORS** - Middleware para CORS
 - **dotenv** - Gerenciamento de variáveis de ambiente
+- **crypto** - Geração de UUID para Game IDs
 
 ### Infraestrutura
 - **Docker** - Containerização
@@ -478,4 +615,39 @@ sqlite3 data/termo.db "SELECT name FROM sqlite_master WHERE type='index';"
 - **Foreign Keys** - Integridade referencial
 - **Indexes** - Otimização de queries
 - **Constraints** - UNIQUE, CHECK, NOT NULL
+- **UUID Hash** - Game IDs únicos
+- **JSON Arrays** - Armazenamento de Game IDs no History
+- **Cascade Deletes** - Limpeza automática de dados relacionados
+
+## Estado Atual do Projeto
+
+### ✅ Implementado
+- **Sistema de Autenticação**: Registro, login e JWT
+- **Sistema de Jogos**: Finalização, histórico e palavras aleatórias
+- **Sistema de Amizades**: Pedidos, aceitação e bloqueio
+- **Auditoria**: Log automático de ações
+- **Banco de Dados**: Estrutura completa com relacionamentos
+
+### 🔄 Em Desenvolvimento
+- **Sistema de Estatísticas**: Estrutura preparada no banco, desenvolvimento em branch separada
+
+### 📋 Próximos Passos
+- Implementação completa do sistema de stats
+- Sistema de ranking/leaderboard
+- Notificações em tempo real
+- Sistema de conquistas/badges
+
+## Contribuição
+
+Para contribuir com o projeto:
+
+1. Faça um fork do repositório
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -am 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
+5. Abra um Pull Request
+
+## Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
 

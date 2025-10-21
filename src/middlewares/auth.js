@@ -21,6 +21,7 @@ export const authenticateToken = (req, res, next) => {
   }
 
   req.user = decoded;
+  req.userId = decoded.userId; // Adicionar compatibilidade
   next();
 };
 

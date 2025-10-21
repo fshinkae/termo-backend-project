@@ -31,12 +31,15 @@ CREATE TABLE IF NOT EXISTS Keyword (
 );
 
 CREATE TABLE IF NOT EXISTS Game (
-  Game_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+  Game_ID TEXT PRIMARY KEY,
+  User_ID INTEGER NOT NULL,
   Keyword_ID INTEGER NOT NULL,
   Tries INTEGER DEFAULT 0,
   isWin INTEGER DEFAULT 0,
   XP INTEGER DEFAULT 0,
   Points INTEGER DEFAULT 0,
+  Created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (User_ID) REFERENCES Users(User_Id) ON DELETE CASCADE,
   FOREIGN KEY (Keyword_ID) REFERENCES Keyword(Keyword_ID) ON DELETE CASCADE
 );
 
@@ -73,7 +76,9 @@ CREATE INDEX IF NOT EXISTS idx_friendships_friend ON Friendships(Friend_ID);
 CREATE INDEX IF NOT EXISTS idx_friendships_status ON Friendships(Status);
 CREATE INDEX IF NOT EXISTS idx_activity_log_user ON Activity_Log(User_ID);
 CREATE INDEX IF NOT EXISTS idx_activity_log_action ON Activity_Log(Action_Type);
+CREATE INDEX IF NOT EXISTS idx_game_user ON Game(User_ID);
 CREATE INDEX IF NOT EXISTS idx_game_keyword ON Game(Keyword_ID);
+CREATE INDEX IF NOT EXISTS idx_game_created ON Game(Created_at);
 
 DROP TRIGGER IF EXISTS log_user_insert;
 CREATE TRIGGER log_user_insert

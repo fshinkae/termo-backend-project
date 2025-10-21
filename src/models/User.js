@@ -55,6 +55,12 @@ class User {
     const stmt = db.prepare('SELECT * FROM History WHERE Historic_ID = ?');
     return stmt.get(user.History_ID);
   }
+
+  static updateHistoryId(userId, historyId) {
+    const stmt = db.prepare('UPDATE Users SET History_ID = ? WHERE User_Id = ?');
+    const result = stmt.run(historyId, userId);
+    return result.changes > 0;
+  }
 }
 
 export default User;
