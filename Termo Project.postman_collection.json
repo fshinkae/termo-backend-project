@@ -163,6 +163,77 @@
 							"body": "{\n    \"message\": \"Login successful\",\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoidGVzdGVAdGVzdGUuY29tIiwiaWF0IjoxNzYwNjU3NTkxLCJleHAiOjE3NjEyNjIzOTF9.o4aiXysEoX1Mk3HZrMxHMJpIHLOFKgAN-CI5z3CGq0M\",\n    \"user\": {\n        \"id\": 3,\n        \"nickname\": \"teste\",\n        \"email\": \"teste@teste.com\"\n    }\n}"
 						}
 					]
+				},
+				{
+					"name": "Get User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "x-caller-id",
+								"value": "{{userId}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/auth/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"user"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get User Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "x-caller-id",
+										"value": "{{userId}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/auth/user",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"auth",
+										"user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"User retrieved successfully\",\n  \"user\": {\n    \"id\": 7,\n    \"nickname\": \"NovoTeste\",\n    \"email\": \"novoteste@example.com\",\n    \"avatar\": null,\n    \"status\": {\n      \"statusId\": 8,\n      \"points\": 0,\n      \"wins\": 0,\n      \"loses\": 0,\n      \"xp\": 0,\n      \"games\": 0\n    }\n  }\n}"
+						}
+					]
 				}
 			]
 		},

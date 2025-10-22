@@ -248,6 +248,60 @@ Autentica um usuário e retorna um token JWT.
   }
   ```
 
+#### GET /api/auth/user
+Obtém os dados completos do usuário autenticado.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN",
+  "x-caller-id": "string"
+}
+```
+
+**Respostas:**
+- `200 OK` - Usuário obtido com sucesso
+  ```json
+  {
+    "message": "User retrieved successfully",
+    "user": {
+      "id": 1,
+      "nickname": "string",
+      "email": "string",
+      "avatar": null,
+      "status": {
+        "statusId": 1,
+        "points": 150,
+        "wins": 5,
+        "loses": 2,
+        "xp": 300,
+        "games": 7
+      }
+    }
+  }
+  ```
+- `400 Bad Request` - Header x-caller-id ausente
+  ```json
+  {
+    "error": "Unavailable Field",
+    "message": "x-caller-id header is required"
+  }
+  ```
+- `401 Unauthorized` - Token inválido ou ausente
+  ```json
+  {
+    "error": "Unauthorized",
+    "message": "Invalid or expired token"
+  }
+  ```
+- `404 Not Found` - Usuário não encontrado
+  ```json
+  {
+    "error": "Not Found",
+    "message": "User not found"
+  }
+  ```
+
 ### Game
 
 #### PUT /api/game/finish

@@ -89,3 +89,51 @@ export const login = async (req, res) => {
   }
 };
 
+export const getUser = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(400).json({
+        error: 'Unavailable Field',
+        message: 'User ID not found in token'
+      });
+    }
+
+    const user = User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'Not Found',
+        message: 'User not found'
+      });
+    }
+
+    const status = User.getStatus(user.Status_ID);
+
+    return res.status(200).json({
+      message: 'User retrieved successfully',
+      user: {
+        id: user.User_Id,
+        nickname: user.Nickname,
+        email: user.Email,
+        avatar: user.Avatar,
+        status: status ? {
+          statusId: status.Status_ID,
+          points: status.Points,
+          wins: status.Wins,
+          loses: status.Loses,
+          xp: status.XP,
+          games: status.Games
+        } : null
+      }
+    });
+  } catch (error) {
+    console.error('Get user error:', error);
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: 'An error occurred while retrieving user data'
+    });
+  }
+};
+
