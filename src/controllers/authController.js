@@ -137,3 +137,49 @@ export const getUser = async (req, res) => {
   }
 };
 
+export const searchUser = async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    if (!email || email.trim() === '') {
+      return res.status(400).json({
+        error: 'Unavailable Field',
+        message: 'Email is required'
+      });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        error: 'Unavailable Field',
+        message: 'Invalid email format'
+      });
+    }
+
+    const user = User.findByEmail(email.trim());
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'Not Found',
+        message: 'User not found'
+      });
+    }
+
+    return res.status(200).json({
+      message: 'User found',
+      user: {
+        id: user.User_Id,
+        nickname: user.Nickname,
+        email: user.Email,
+        avatar: user.Avatar
+      }
+    });
+  } catch (error) {
+    console.error('Search user error:', error);
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: 'An error occurred while searching for user'
+    });
+  }
+};
+

@@ -4,6 +4,8 @@ import { validateGameFinish } from '../middlewares/validation.js';
 import { authenticateToken } from '../middlewares/auth.js';
 import Keyword from '../models/Keyword.js';
 import History from '../models/History.js';
+import User from '../models/User.js';
+import db from '../config/database.js';
 
 const router = express.Router();
 
@@ -30,6 +32,58 @@ router.get('/random-keyword', authenticateToken, async (req, res) => {
     res.status(500).json({
       error: 'Internal Server Error',
       message: 'Failed to get random keyword'
+    });
+  }
+});
+
+// Obter ranking de jogadores
+router.get('/ranking', authenticateToken, async (req, res) => {
+  try {
+    const stmt = db.prepare(`
+      SELECT 
+        u.User_Id as id,
+        u.Nickname as name,
+        u.Avatar as avatar,
+        s.Points as points,
+        s.Games as gamesPlayed,
+        s.Wins as wins,
+        s.Loses as loses,
+        s.XP as xp,
+        CASE 
+          WHEN s.Games > 0 THEN ROUND((s.Wins * 100.0 / s.Games), 0)
+          ELSE 0 
+        END as winRate
+      FROM Users u
+      INNER JOIN Status s ON u.Status_ID = s.Status_ID
+      WHERE s.Games > 0
+      ORDER BY s.Points DESC, s.XP DESC
+    `);
+    
+    const players = stmt.all();
+
+    const ranking = players.map((player, index) => ({
+      id: player.id,
+      name: player.name,
+      avatar: player.avatar || null,
+      points: player.points || 0,
+      gamesPlayed: player.gamesPlayed || 0,
+      wins: player.wins || 0,
+      loses: player.loses || 0,
+      xp: player.xp || 0,
+      winRate: player.winRate || 0,
+      position: index + 1
+    }));
+
+    res.json({
+      message: 'Ranking retrieved successfully',
+      totalPlayers: ranking.length,
+      ranking
+    });
+  } catch (err) {
+    console.error('Error getting ranking:', err);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: 'Failed to get ranking'
     });
   }
 });

@@ -3,7 +3,7 @@ import User from '../models/User.js';
 
 export const addFriend = (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.userId;
     const { friendId } = req.body;
 
     if (userId === parseInt(friendId)) {
@@ -68,7 +68,7 @@ export const addFriend = (req, res) => {
 
 export const acceptFriend = (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.userId;
     const { friendId } = req.params;
 
     const friend = User.findById(friendId);
@@ -123,7 +123,7 @@ export const acceptFriend = (req, res) => {
 
 export const removeFriend = (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.userId;
     const { friendId } = req.params;
 
     const friend = User.findById(friendId);
@@ -164,7 +164,7 @@ export const removeFriend = (req, res) => {
 
 export const blockUser = (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.userId;
     const { friendId } = req.params;
 
     if (userId === parseInt(friendId)) {
@@ -205,7 +205,7 @@ export const blockUser = (req, res) => {
 
 export const getFriends = (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.userId;
     const friends = Friendship.getFriends(userId);
 
     return res.status(200).json({
@@ -230,7 +230,7 @@ export const getFriends = (req, res) => {
 
 export const getPendingRequests = (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.userId;
     const requests = Friendship.getPendingRequests(userId);
 
     return res.status(200).json({
@@ -255,7 +255,7 @@ export const getPendingRequests = (req, res) => {
 
 export const getSentRequests = (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.userId;
     const requests = Friendship.getSentRequests(userId);
 
     return res.status(200).json({
@@ -280,7 +280,7 @@ export const getSentRequests = (req, res) => {
 
 export const getBlocked = (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.userId;
     const blocked = Friendship.getBlocked(userId);
 
     return res.status(200).json({

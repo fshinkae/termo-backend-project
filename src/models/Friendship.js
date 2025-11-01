@@ -58,13 +58,17 @@ class Friendship {
 
   static getFriends(userId) {
     const stmt = db.prepare(`
-      SELECT u.User_Id, u.Nickname, u.Email, u.Avatar, f.Created_At
+      SELECT DISTINCT u.User_Id, u.Nickname, u.Email, u.Avatar, MIN(f.Created_At) as Created_At
       FROM Friendships f
-      INNER JOIN Users u ON f.Friend_ID = u.User_Id
-      WHERE f.User_ID = ? AND f.Status = 'accepted'
+      INNER JOIN Users u ON (
+        (f.User_ID = ? AND f.Friend_ID = u.User_Id) OR
+        (f.Friend_ID = ? AND f.User_ID = u.User_Id)
+      )
+      WHERE f.Status = 'accepted'
+      GROUP BY u.User_Id, u.Nickname, u.Email, u.Avatar
       ORDER BY u.Nickname ASC
     `);
-    return stmt.all(userId);
+    return stmt.all(userId, userId);
   }
 
   static getPendingRequests(userId) {
