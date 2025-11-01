@@ -2,6 +2,7 @@ import Game from '../models/Game.js';
 import History from '../models/History.js';
 import Keyword from '../models/Keyword.js';
 import User from '../models/User.js';
+import db from '../config/database.js';
 
 export const finishGame = async (req, res) => {
     try {
@@ -51,10 +52,26 @@ export const finishGame = async (req, res) => {
             points: score
         });
 
-        // 3. SEND HISTORY STATS - Não precisa mais da tabela History
-        // O histórico é diretamente por User_ID na tabela Game
+        // 3. Atualizar Status do usuário
+        if (user.Status_ID) {
+            const currentStatus = User.getStatus(user.Status_ID);
+            if (currentStatus) {
+                const newPoints = (currentStatus.Points || 0) + score;
+                const newWins = win ? (currentStatus.Wins || 0) + 1 : (currentStatus.Wins || 0);
+                const newLoses = !win ? (currentStatus.Loses || 0) + 1 : (currentStatus.Loses || 0);
+                const newXP = (currentStatus.XP || 0) + Math.floor(xp);
+                const newGames = (currentStatus.Games || 0) + 1;
 
-        // Buscar dados completos do jogo criado
+                const updateStatusStmt = db.prepare(`
+                    UPDATE Status 
+                    SET Points = ?, Wins = ?, Loses = ?, XP = ?, Games = ?
+                    WHERE Status_ID = ?
+                `);
+                updateStatusStmt.run(newPoints, newWins, newLoses, newXP, newGames, user.Status_ID);
+            }
+        }
+
+        // 4. Buscar dados completos do jogo criado
         const gameData = await Game.findById(gameId);
         const keywordData = await Keyword.findById(keywordId);
 
