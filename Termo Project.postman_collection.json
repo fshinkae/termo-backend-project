@@ -45,7 +45,7 @@
 					},
 					"response": [
 						{
-							"name": "Register",
+							"name": "Register Success",
 							"originalRequest": {
 								"method": "POST",
 								"header": [
@@ -77,10 +77,62 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": "",
-							"header": [],
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
 							"cookie": [],
-							"body": ""
+							"body": "{\n  \"message\": \"User registered successfully\",\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiam9hbzNAdGVzdGUuY29tIiwiaWF0IjoxNzYwNjU3NTkxLCJleHAiOjE3NjEyNjIzOTF9.example\",\n  \"user\": {\n    \"id\": 1,\n    \"nickname\": \"João Silva 3\",\n    \"email\": \"joao3@teste.com\"\n  }\n}"
+						},
+						{
+							"name": "Register Error - Email Already Exists",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"João Silva 3\",\n    \"email\": \"joao3@teste.com\",\n    \"password\": \"senha123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/auth/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Conflict\",\n  \"message\": \"Email already registered\"\n}"
 						}
 					]
 				},
@@ -232,6 +284,123 @@
 							],
 							"cookie": [],
 							"body": "{\n  \"message\": \"User retrieved successfully\",\n  \"user\": {\n    \"id\": 7,\n    \"nickname\": \"NovoTeste\",\n    \"email\": \"novoteste@example.com\",\n    \"avatar\": null,\n    \"status\": {\n      \"statusId\": 8,\n      \"points\": 0,\n      \"wins\": 0,\n      \"loses\": 0,\n      \"xp\": 0,\n      \"games\": 0\n    }\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Search User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/auth/search?email=teste@teste.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"search"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "teste@teste.com"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Search User Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/auth/search?email=teste@teste.com",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"auth",
+										"search"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "teste@teste.com"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"User found\",\n  \"user\": {\n    \"id\": 2,\n    \"nickname\": \"teste\",\n    \"email\": \"teste@teste.com\",\n    \"avatar\": null\n  }\n}"
+						},
+						{
+							"name": "Search User Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/auth/search?email=naoexiste@teste.com",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"auth",
+										"search"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "naoexiste@teste.com"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Not Found\",\n  \"message\": \"User not found\"\n}"
 						}
 					]
 				}
@@ -575,6 +744,69 @@
 							"body": "{\n  \"message\": \"Game history retrieved successfully\",\n  \"totalGames\": 2,\n  \"games\": [\n    {\n      \"id\": \"394dbdba-0495-44cc-b19b-87272ee78b14\",\n      \"keyword\": \"TESTE\",\n      \"tries\": 3,\n      \"isWin\": true,\n      \"xp\": 200,\n      \"points\": 100,\n      \"createdAt\": \"2025-10-20 21:00:51\"\n    },\n    {\n      \"id\": \"19803b6a-4c50-48d4-ba99-a9957e6c3e42\",\n      \"keyword\": \"PERDE\",\n      \"tries\": 5,\n      \"isWin\": false,\n      \"xp\": 37,\n      \"points\": 75,\n      \"createdAt\": \"2025-10-20 18:25:16\"\n    }\n  ]\n}"
 						}
 					]
+				},
+				{
+					"name": "Get Ranking",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/game/ranking",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"game",
+								"ranking"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ranking Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/game/ranking",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"game",
+										"ranking"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Ranking retrieved successfully\",\n  \"totalPlayers\": 10,\n  \"ranking\": [\n    {\n      \"id\": 1,\n      \"name\": \"João\",\n      \"avatar\": null,\n      \"points\": 1500,\n      \"gamesPlayed\": 50,\n      \"wins\": 35,\n      \"loses\": 15,\n      \"xp\": 5000,\n      \"winRate\": 70,\n      \"position\": 1\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Maria\",\n      \"avatar\": null,\n      \"points\": 1200,\n      \"gamesPlayed\": 40,\n      \"wins\": 28,\n      \"loses\": 12,\n      \"xp\": 4000,\n      \"winRate\": 70,\n      \"position\": 2\n    }\n  ]\n}"
+						}
+					]
 				}
 			]
 		},
@@ -618,7 +850,57 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Add Friend Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"friendId\": 2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/friend/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"friend",
+										"add"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Friend request sent successfully\",\n  \"friendship\": {\n    \"id\": 1,\n    \"userId\": 1,\n    \"friendId\": 2,\n    \"status\": \"pending\"\n  }\n}"
+						}
+					]
 				},
 				{
 					"name": "Accept Friend Request",
@@ -652,7 +934,45 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Accept Friend Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/friend/accept/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"friend",
+										"accept",
+										"2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Friend request accepted\",\n  \"friend\": {\n    \"id\": 2,\n    \"nickname\": \"Alice\",\n    \"email\": \"alice@test.com\",\n    \"avatar\": null\n  }\n}"
+						}
+					]
 				},
 				{
 					"name": "Remove Friend",
@@ -686,7 +1006,45 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Remove Friend Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/friend/remove/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"friend",
+										"remove",
+										"2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Friendship removed successfully\"\n}"
+						}
+					]
 				},
 				{
 					"name": "Block User",
@@ -720,7 +1078,45 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Block User Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/friend/block/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"friend",
+										"block",
+										"2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"User blocked successfully\"\n}"
+						}
+					]
 				},
 				{
 					"name": "Get Friends List",
@@ -746,7 +1142,44 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Friends List Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/friend/list",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"friend",
+										"list"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Friends retrieved successfully\",\n  \"count\": 2,\n  \"friends\": [\n    {\n      \"id\": 2,\n      \"nickname\": \"Alice\",\n      \"email\": \"alice@test.com\",\n      \"avatar\": null,\n      \"friendsSince\": \"2025-10-19 21:35:07\"\n    },\n    {\n      \"id\": 3,\n      \"nickname\": \"Bob\",\n      \"email\": \"bob@test.com\",\n      \"avatar\": null,\n      \"friendsSince\": \"2025-10-20 15:20:10\"\n    }\n  ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Get Pending Requests",
@@ -773,7 +1206,45 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Pending Requests Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/friend/requests/pending",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"friend",
+										"requests",
+										"pending"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Pending requests retrieved successfully\",\n  \"count\": 1,\n  \"requests\": [\n    {\n      \"id\": 3,\n      \"nickname\": \"Bob\",\n      \"email\": \"bob@test.com\",\n      \"avatar\": null,\n      \"requestedAt\": \"2025-10-19 21:35:07\"\n    }\n  ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Get Sent Requests",
@@ -800,7 +1271,45 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Sent Requests Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/friend/requests/sent",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"friend",
+										"requests",
+										"sent"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Sent requests retrieved successfully\",\n  \"count\": 1,\n  \"requests\": [\n    {\n      \"id\": 4,\n      \"nickname\": \"Charlie\",\n      \"email\": \"charlie@test.com\",\n      \"avatar\": null,\n      \"requestedAt\": \"2025-10-20 10:15:30\"\n    }\n  ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Get Blocked Users",
@@ -826,7 +1335,44 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Blocked Users Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/friend/blocked",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"friend",
+										"blocked"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Blocked users retrieved successfully\",\n  \"count\": 1,\n  \"blocked\": [\n    {\n      \"id\": 3,\n      \"nickname\": \"Bob\",\n      \"email\": \"bob@test.com\",\n      \"avatar\": null\n    }\n  ]\n}"
+						}
+					]
 				}
 			]
 		}

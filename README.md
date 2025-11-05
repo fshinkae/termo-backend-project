@@ -302,6 +302,48 @@ Obtém os dados completos do usuário autenticado.
   }
   ```
 
+#### GET /api/auth/search
+Busca um usuário por email.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN"
+}
+```
+
+**Query Parameters:**
+- `email` (string, obrigatório) - Email do usuário a buscar
+
+**Respostas:**
+- `200 OK` - Usuário encontrado
+  ```json
+  {
+    "message": "User found",
+    "user": {
+      "id": 2,
+      "nickname": "Alice",
+      "email": "alice@test.com",
+      "avatar": null
+    }
+  }
+  ```
+- `400 Bad Request` - Email inválido ou ausente
+  ```json
+  {
+    "error": "Unavailable Field",
+    "message": "Email is required"
+  }
+  ```
+- `401 Unauthorized` - Token inválido
+- `404 Not Found` - Usuário não encontrado
+  ```json
+  {
+    "error": "Not Found",
+    "message": "User not found"
+  }
+  ```
+
 ### Game
 
 #### PUT /api/game/finish
@@ -393,6 +435,40 @@ Obtém o histórico de jogos do usuário autenticado.
         "xp": 200,
         "points": 100,
         "createdAt": "2025-10-20 21:00:51"
+      }
+    ]
+  }
+  ```
+- `401 Unauthorized` - Token inválido
+
+#### GET /api/game/ranking
+Obtém o ranking de jogadores ordenado por pontos e XP.
+
+**Headers:**
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN"
+}
+```
+
+**Respostas:**
+- `200 OK` - Ranking obtido com sucesso
+  ```json
+  {
+    "message": "Ranking retrieved successfully",
+    "totalPlayers": 10,
+    "ranking": [
+      {
+        "id": 1,
+        "name": "João",
+        "avatar": null,
+        "points": 1500,
+        "gamesPlayed": 50,
+        "wins": 35,
+        "loses": 15,
+        "xp": 5000,
+        "winRate": 70,
+        "position": 1
       }
     ]
   }
@@ -572,6 +648,327 @@ Lista usuários bloqueados.
 }
 ```
 
+**Respostas:**
+- `200 OK`
+  ```json
+  {
+    "message": "Blocked users retrieved successfully",
+    "count": 1,
+    "blocked": [
+      {
+        "id": 3,
+        "nickname": "Bob",
+        "email": "bob@test.com",
+        "avatar": null
+      }
+    ]
+  }
+  ```
+
+## Socket.IO - Comunicação em Tempo Real
+
+O backend utiliza Socket.IO para comunicação em tempo real, permitindo funcionalidades como:
+- Presença online/offline de usuários
+- Lista de amigos online
+- Convites para jogos em duelo
+- Salas de jogo multiplayer
+- Sincronização de jogadas em tempo real
+
+### Conexão
+
+Para conectar ao servidor Socket.IO, envie o token JWT no handshake:
+
+```javascript
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:3000', {
+  auth: {
+    token: 'JWT_TOKEN'
+  }
+});
+```
+
+### Eventos do Cliente (Emitidos)
+
+#### `user:setOnline`
+Define o usuário como online e notifica outros usuários.
+
+**Dados:**
+```json
+{}
+```
+
+#### `friends:getOnline`
+Solicita lista de amigos online.
+
+**Dados:**
+```json
+{}
+```
+
+#### `game:invite`
+Envia convite de jogo para um amigo.
+
+**Dados:**
+```json
+{
+  "toId": 2
+}
+```
+
+#### `game:acceptInvite`
+Aceita um convite de jogo recebido.
+
+**Dados:**
+```json
+{
+  "inviteId": "1-2-1234567890"
+}
+```
+
+#### `game:rejectInvite`
+Rejeita um convite de jogo recebido.
+
+**Dados:**
+```json
+{
+  "inviteId": "1-2-1234567890"
+}
+```
+
+#### `game:ready`
+Indica que o jogador está pronto para iniciar o jogo.
+
+**Dados:**
+```json
+{
+  "roomId": "room-1-2-1234567890"
+}
+```
+
+#### `game:guess`
+Envia uma tentativa de palavra no jogo.
+
+**Dados:**
+```json
+{
+  "roomId": "room-1-2-1234567890",
+  "guess": "SAGAZ"
+}
+```
+
+#### `game:leave`
+Sai da sala de jogo.
+
+**Dados:**
+```json
+{
+  "roomId": "room-1-2-1234567890"
+}
+```
+
+### Eventos do Servidor (Recebidos)
+
+#### `user:online`
+Usuário ficou online.
+
+**Dados:**
+```json
+{
+  "userId": 1,
+  "nickname": "João",
+  "email": "joao@test.com",
+  "avatar": null
+}
+```
+
+#### `user:offline`
+Usuário ficou offline.
+
+**Dados:**
+```json
+{
+  "userId": 1
+}
+```
+
+#### `user:onlineStatus`
+Confirmação do status online do próprio usuário.
+
+**Dados:**
+```json
+{
+  "online": true
+}
+```
+
+#### `friends:onlineList`
+Lista de amigos online.
+
+**Dados:**
+```json
+{
+  "friends": [
+    {
+      "id": 2,
+      "nickname": "Alice",
+      "email": "alice@test.com",
+      "avatar": null,
+      "online": true
+    }
+  ]
+}
+```
+
+#### `game:inviteReceived`
+Recebeu um convite de jogo.
+
+**Dados:**
+```json
+{
+  "invite": {
+    "id": "1-2-1234567890",
+    "fromId": 1,
+    "fromNickname": "João",
+    "fromAvatar": null,
+    "createdAt": "2025-11-01T18:00:00.000Z"
+  }
+}
+```
+
+#### `game:inviteSent`
+Convite de jogo enviado com sucesso.
+
+**Dados:**
+```json
+{
+  "invite": {
+    "id": "1-2-1234567890",
+    "toId": 2,
+    "toNickname": "Alice",
+    "createdAt": "2025-11-01T18:00:00.000Z"
+  }
+}
+```
+
+#### `game:inviteAccepted`
+Convite aceito e sala criada.
+
+**Dados:**
+```json
+{
+  "roomId": "room-1-2-1234567890",
+  "opponent": {
+    "id": 2,
+    "nickname": "Alice",
+    "avatar": null
+  }
+}
+```
+
+#### `game:inviteRejected`
+Convite rejeitado.
+
+**Dados:**
+```json
+{
+  "inviteId": "1-2-1234567890",
+  "fromId": 2
+}
+```
+
+#### `game:inviteExpired`
+Convite expirado (após 60 segundos).
+
+**Dados:**
+```json
+{
+  "inviteId": "1-2-1234567890"
+}
+```
+
+#### `game:opponentReady`
+Oponente está pronto.
+
+**Dados:**
+```json
+{
+  "roomId": "room-1-2-1234567890"
+}
+```
+
+#### `game:start`
+Jogo iniciado com palavra aleatória.
+
+**Dados:**
+```json
+{
+  "roomId": "room-1-2-1234567890",
+  "keyword": "SAGAZ",
+  "keywordId": 1
+}
+```
+
+#### `game:guessResult`
+Resultado da tentativa de palavra.
+
+**Dados (correto):**
+```json
+{
+  "correct": true,
+  "score": 1,
+  "opponentScore": 0
+}
+```
+
+**Dados (incorreto):**
+```json
+{
+  "correct": false,
+  "guess": "TESTE"
+}
+```
+
+#### `game:opponentGuessResult`
+Oponente acertou uma palavra.
+
+**Dados:**
+```json
+{
+  "opponentScore": 1,
+  "yourScore": 0
+}
+```
+
+#### `game:newKeyword`
+Nova palavra gerada após acerto.
+
+**Dados:**
+```json
+{
+  "keyword": "CORDA",
+  "keywordId": 2
+}
+```
+
+#### `game:opponentLeft`
+Oponente saiu da sala.
+
+**Dados:**
+```json
+{}
+```
+
+#### `game:error`
+Erro relacionado ao jogo.
+
+**Dados:**
+```json
+{
+  "message": "Usuário não está online"
+}
+```
+
 ## Exemplos de Uso
 
 ### Consultar Logs de Auditoria
@@ -656,6 +1053,7 @@ sqlite3 data/termo.db "SELECT name FROM sqlite_master WHERE type='index';"
 - **SQLite (better-sqlite3)** - Banco de dados
 - **bcryptjs** - Hash de senhas
 - **jsonwebtoken** - Autenticação JWT
+- **socket.io** - Comunicação em tempo real
 - **CORS** - Middleware para CORS
 - **dotenv** - Gerenciamento de variáveis de ambiente
 - **crypto** - Geração de UUID para Game IDs
@@ -676,20 +1074,20 @@ sqlite3 data/termo.db "SELECT name FROM sqlite_master WHERE type='index';"
 ## Estado Atual do Projeto
 
 ### ✅ Implementado
-- **Sistema de Autenticação**: Registro, login e JWT
-- **Sistema de Jogos**: Finalização, histórico e palavras aleatórias
+- **Sistema de Autenticação**: Registro, login, JWT e busca de usuários
+- **Sistema de Jogos**: Finalização, histórico, palavras aleatórias e ranking
 - **Sistema de Amizades**: Pedidos, aceitação e bloqueio
+- **Socket.IO**: Comunicação em tempo real com presença online, convites e salas de jogo
 - **Auditoria**: Log automático de ações
 - **Banco de Dados**: Estrutura completa com relacionamentos
 
 ### 🔄 Em Desenvolvimento
-- **Sistema de Estatísticas**: Estrutura preparada no banco, desenvolvimento em branch separada
+- **Sistema de Estatísticas Avançadas**: Melhorias no sistema de ranking
 
 ### 📋 Próximos Passos
-- Implementação completa do sistema de stats
-- Sistema de ranking/leaderboard
-- Notificações em tempo real
 - Sistema de conquistas/badges
+- Melhorias no sistema de duelo multiplayer
+- Histórico de partidas multiplayer
 
 ## Contribuição
 
